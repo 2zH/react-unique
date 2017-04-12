@@ -4,7 +4,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Feature
 
+- Gitflow
 - React\Mobx\Material-UI
 - Webpack2
-- ~~Support PRPL performance mode
-- ~~Support GitHook script
+- ~~Support PRPL performance mode~~
+- ~~Support GitHook script~~
