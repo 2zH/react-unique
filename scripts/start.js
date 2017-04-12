@@ -28,6 +28,7 @@ var paths = require('../config/paths');
 var useYarn = fs.existsSync(paths.yarnLockFile);
 var cli = useYarn ? 'yarn' : 'npm';
 var isInteractive = process.stdout.isTTY;
+process.noDeprecation = true
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
@@ -258,11 +259,23 @@ function runDevServer(host, port, protocol) {
     // Reportedly, this avoids CPU overload on some systems.
     // https://github.com/facebookincubator/create-react-app/issues/293
     watchOptions: {
-      ignored: /node_modules/
+      ignored: /node_modules/,
+      // Enable use WebpackDevServer in docker container
+      poll: true
     },
     // Enable HTTPS if the HTTPS environment variable is set to 'true'
     https: protocol === "https",
-    host: host
+    host: host,
+    // proxy: {
+    //   "/api/*": {
+    //     ssl: {
+    //       key: fs.readFileSync(`${paths.appPublic}/cert/privkey1.pem`, 'utf8'),
+    //       cert: fs.readFileSync(`${paths.appPublic}/cert/cert1.pem`, 'utf8')
+    //     },
+    //     target: "https://unique.moe",
+    //     secure: true
+    //   }
+    // }
   });
 
   // Our custom middleware proxies requests to /index.html or a remote API.
