@@ -128,6 +128,7 @@ if (env === 'test') {
       ],
       // Adds syntax support for import()
       require.resolve('babel-plugin-syntax-dynamic-import'),
+      require.resolve('babel-plugin-transform-decorators-legacy'),
     ]),
   };
 

@@ -1,6 +1,5 @@
 'use strict';
 
-const autoprefixer = require('autoprefixer');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
@@ -8,6 +7,8 @@ const InterpolateHtmlPlugin = require('../packages/react-dev-utils/InterpolateHt
 const WatchMissingNodeModulesPlugin = require('../packages/react-dev-utils/WatchMissingNodeModulesPlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
+const nib = require('nib');
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -60,6 +61,7 @@ module.exports = {
     // served by WebpackDevServer in development. This is the JS bundle
     // containing code from all our entry points, and the Webpack runtime.
     filename: 'static/js/bundle.js',
+    chunkFilename: 'bundle-[id].js',
     // This is the URL that app is served from. We use "/" in development.
     publicPath: publicPath,
   },
@@ -113,6 +115,7 @@ module.exports = {
           /\.html$/,
           /\.(js|jsx)$/,
           /\.css$/,
+          /\.styl$/,
           /\.json$/,
           /\.bmp$/,
           /\.gif$/,
@@ -146,7 +149,7 @@ module.exports = {
           // It enables caching results in ./node_modules/.cache/babel-loader/
           // directory for faster rebuilds.
           cacheDirectory: true,
-          plugins: ["transform-decorators-legacy"]
+          plugins: ["transform-decorators-legacy", "syntax-dynamic-import"]
         },
       },
       // "postcss" loader applies autoprefixer to our CSS.
@@ -155,29 +158,21 @@ module.exports = {
       // In production, we use a plugin to extract that CSS to a file, but
       // in development "style" loader enables hot editing of CSS.
       {
-        test: /\.css$/,
+        test: [/\.styl$/, /\.css$/,],
         use: [
           'style-loader',
           {
             loader: 'css-loader',
             options: {
+              modules: true,
               importLoaders: 1,
+              localIdentName: '[name]__[local]___[hash:base64:5]'
             },
           },
           {
-            loader: 'postcss-loader',
+            loader: 'stylus-loader',
             options: {
-              ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
-              plugins: () => [
-                autoprefixer({
-                  browsers: [
-                    '>1%',
-                    'last 4 versions',
-                    'Firefox ESR',
-                    'not ie < 9', // React doesn't support IE8 anyway
-                  ],
-                }),
-              ],
+              use: [nib()],
             },
           },
         ],
@@ -211,6 +206,11 @@ module.exports = {
     // makes the discovery automatic so you don't have to restart.
     // See https://github.com/facebookincubator/create-react-app/issues/186
     new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+    // support service worker cache
+    new SWPrecacheWebpackPlugin({
+      cacheId: 'react-router-website',
+      staticFileGlobsIgnorePatterns: [ /\.map$/ ]
+    })
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
