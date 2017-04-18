@@ -9,7 +9,7 @@ class Waterfall {
 
   constructor() {
     const data = Api.getMockData(10);
-    this.setChilds(data);
+    this.childs = data;
     autorun(() => {
       console.log(`container: ${this.containerWidth}`);
       console.dir(this.childs);
