@@ -142,7 +142,8 @@ module.exports = {
         loader: 'babel-loader',
         options: {
           babelrc: false,
-          presets: [require.resolve('../packages/babel-preset-react-app')]
+          presets: [require.resolve('../packages/babel-preset-react-app')],
+          plugins: ['babel-plugin-transform-decorators-legacy']
         },
       },
       // "postcss" loader applies autoprefixer to our CSS.
