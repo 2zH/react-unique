@@ -46,10 +46,6 @@ class Starred extends Component {
       }))
   }
 
-  componentWillReact() {
-        console.log("I will re-render, since the todo has changed!");
-    }
-
   getChildsHeight = () => {
     let list = [];
     const hiddenContainer = ReactDOM.findDOMNode(this.refs.hiddenContainer).childNodes;

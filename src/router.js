@@ -5,8 +5,6 @@ import {
 } from 'react-router-dom';
 // css
 import './App.styl';
-// mobx
-import {observer} from "mobx-react";
 // basic component
 import Header from './components/header';
 import Aside from './components/aside';
@@ -20,7 +18,6 @@ const lazyLoad = component => asyncComponent({
 
 const onUpdate = () => {window.scroll(0, 0);}
 
-@observer
 class App extends Component {
 
   render() {
@@ -31,10 +28,10 @@ class App extends Component {
           <main>
             <Aside />
             <Route exact={true} path="/" component={Home}/>
-            <Route path="/starred" component={lazyLoad('starred')}/>
+            {/*<Route path="/starred" component={lazyLoad('starred')}/>
             <Route path="/inbox" component={lazyLoad('inbox')}/>
             <Route path="/drafts" component={lazyLoad('drafts')}/>
-            <Route path="/sentmail" component={lazyLoad('sentmail')}/>
+            <Route path="/sentmail" component={lazyLoad('sentmail')}/>*/}
           </main>
         </div>
       </Router>

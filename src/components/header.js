@@ -6,9 +6,9 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 // icons
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-// mobx
-import {observer} from "mobx-react";
-import drawer from "../store/drawer";
+// redux
+import { setDrawerToggler } from '../actions';
+import { connect } from 'react-redux';
 
 
 // console.log(theme);
@@ -28,16 +28,17 @@ const Logged = (props) => (
   </IconMenu>
 );
 
-@observer
+@connect(null, { setDrawerToggler })
 class Header extends Component {
 
   render() {
+    const { setDrawerToggler } = this.props;
     return (
         <header>
           <AppBar
             title="Unique Moe"
             iconElementRight={<Logged />}
-            onLeftIconButtonTouchTap={drawer.trigger}
+            onLeftIconButtonTouchTap={() => setDrawerToggler()}
           />
         </header>
     );
