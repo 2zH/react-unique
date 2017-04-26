@@ -1,11 +1,13 @@
 import {
   ACTIVE_DRAWER_TOGGLER,
-  INACTIVE_DRAWER_TOGGLER
+  INACTIVE_DRAWER_TOGGLER,
+  SET_CONTAINER_WIDTH,
+  SET_CARDS_UI
 } from '../constants/ActionTypes';
 
 const initalState = {
   drawer: {
-    status: "close",
+    status: "open",
     AffectedUI: {
       aside: {width: "280px"},
       menu: {transform: "translateX(0)"}
@@ -17,26 +19,41 @@ const initalState = {
   }
 }
 
-const card = (state = initalState, action) => {
+const ui = (state = initalState, action) => {
   switch (action.type) {
     case ACTIVE_DRAWER_TOGGLER:
-      const activeDrawerState = action.drawer;
       return {
         ...state,
-        drawer: activeDrawerState
+        drawer: action.drawer
       };
     case INACTIVE_DRAWER_TOGGLER:
-      const inactiveDrawerState = action.drawer;
       return {
         ...state,
-        drawer: inactiveDrawerState
+        drawer: action.drawer
       };
+    case SET_CONTAINER_WIDTH:
+      return {
+        ...state,
+        cards: {
+          ...state.cards,
+          containerWidth: action.containerWidth
+        }
+      };
+    case SET_CARDS_UI:
+      return {
+        ...state, 
+        cards: {
+          ...state.cards,
+          style: action.cards
+        }
+      }
     default:
       return state;
   }
 }
 
-export const getDrawerAffectedUI = state => 
-  state.drawer
+export const getDrawerAffectedUI = state => state.drawer.AffectedUI;
+export const getContainerWidth = state => state.cards.containerWidth;
+export const getCardsUI = state => state.cards.style;
 
-export default card;
+export default ui;

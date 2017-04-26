@@ -28,10 +28,10 @@ class App extends Component {
           <main>
             <Aside />
             <Route exact={true} path="/" component={Home}/>
-            {/*<Route path="/starred" component={lazyLoad('starred')}/>
+            <Route path="/starred" component={lazyLoad('starred')}/>
             <Route path="/inbox" component={lazyLoad('inbox')}/>
             <Route path="/drafts" component={lazyLoad('drafts')}/>
-            <Route path="/sentmail" component={lazyLoad('sentmail')}/>*/}
+            <Route path="/sentmail" component={lazyLoad('sentmail')}/>
           </main>
         </div>
       </Router>

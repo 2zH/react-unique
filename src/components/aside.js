@@ -22,10 +22,10 @@ const mapStateToProps = state => ({
 class Aside extends Component {
 
   render() {
-    const { AffectedUI } = this.props.AffectedUI;
+    const { aside, menu } = this.props.AffectedUI;
     return (
-      <aside style={AffectedUI.aside}>
-        <Menu style={AffectedUI.menu}>
+      <aside style={aside}>
+        <Menu style={menu}>
           <Link to="/"><MenuItem primaryText="Home" rightIcon={<Inbox />} /></Link>
           <Link to="/starred"><MenuItem primaryText="Starred" rightIcon={<Grade />} /></Link>
           <Link to="/inbox"><MenuItem primaryText="Inbox" rightIcon={<Inbox />} /></Link>

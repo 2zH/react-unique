@@ -2,20 +2,20 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 // material-ui-component
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-// mobx
-import {observer} from "mobx-react";
-import waterfall from '../store/waterfall';
 // waterfall
 import AutoResponsive from 'autoresponsive-react';
 // basic component
 import HiddenLayout from './layout/HiddenLayout';
+// redux
+import { connect } from 'react-redux';
+import { getCards, getContainerWidth, getCardsUI } from '../reducers';
+import { setContainerWidth, setChildsStyle } from '../actions';
 
-
-const getCards = (arr) => {
+const cardFactory = (arr, ui) => {
   if (!arr) return;
-  return arr.map(obj => {
+  return arr.map((obj, key) => {
     return (
-      <Card key={Math.random().toString(36).substr(2)} style={obj.style || {width: "240px"}} className="item">
+      <Card key={Math.random().toString(36).substr(2)} style={ui ? ui.key : {width: "240px"}} className="item">
         <CardHeader 
           title={obj.title}
           subtitle={obj.subtitle}
@@ -30,25 +30,35 @@ const getCards = (arr) => {
   })
 }
 
-@observer
+const mapStateToProps = state => ({
+  cards: getCards(state.cards),
+  containerWidth: getContainerWidth(state.ui),
+  uiCard: getCardsUI(state.ui)
+})
+
+const getAutoResponsiveProps = containerWidth => ({
+  itemMargin: 10,
+  containerWidth: containerWidth,
+  itemClassName: 'item',
+  transitionDuration: '.5'
+})
+
+@connect(mapStateToProps, { setContainerWidth, setChildsStyle })
 class Drafts extends Component {
 
   componentDidMount() {
+    const { setContainerWidth, setChildsStyle } = this.props;
     window.addEventListener('resize', () => {
-      waterfall.setContainerWidth(ReactDOM.findDOMNode(this.refs.container).clientWidth)
+      setContainerWidth(ReactDOM.findDOMNode(this.refs.container).clientWidth)
     })
-    waterfall.setChildsStyle(this.getChildsHeight()
-      .map(height => {
+    setChildsStyle(this.getChildsHeight()
+      .map((height, key) => {
         return {
-          width: "300px", 
+          width: "240px", 
           height: `${height}px`
         };
       }))
   }
-
-  componentWillReact() {
-        console.log("I will re-render, since the todo has changed!");
-    }
 
   getChildsHeight = () => {
     let list = [];
@@ -60,12 +70,13 @@ class Drafts extends Component {
   } 
 
   render() {
+    const { cards } = this.props;
     return (
       <section>
-        {waterfall.toggler && <AutoResponsive ref="container" {...waterfall.getAutoResponsiveProps}>
-          {getCards(waterfall.childs)}
-        </AutoResponsive>}
-        <HiddenLayout ref="hiddenContainer">{getCards(waterfall.childs)}</HiddenLayout>
+        <AutoResponsive ref="container" {...getAutoResponsiveProps()}>
+          {cardFactory(cards)}
+        </AutoResponsive>
+        <HiddenLayout ref="hiddenContainer">{cardFactory(cards)}</HiddenLayout>
       </section>
     );
   }
